@@ -18,6 +18,7 @@ RUN dotnet restore "./Services/Catalog/Catalog.API/Catalog.API.csproj"
 COPY . .
 WORKDIR "/src/Services/Catalog/Catalog.API"
 RUN dotnet build "./Catalog.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet dev-certs https
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish

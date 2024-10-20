@@ -10,9 +10,6 @@ namespace Catalog.API.Products.GetProductByCategory
         {
             var product = await session.Query<Product>().Where(p => p.Category.Contains(query.category)).ToListAsync();
 
-            if (product is null)
-                throw new ProductNotFoundException();
-
             return new GetProductByCategoryResult(product);
         }
     }

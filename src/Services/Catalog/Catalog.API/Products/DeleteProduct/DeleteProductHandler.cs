@@ -1,10 +1,20 @@
 ﻿
+using Catalog.API.Products.UpdateProduct;
+
 namespace Catalog.API.Products.DeleteProduct;
 
 public record DeleteProductCommand(Guid Id)
     : ICommand<DeleteProductResult>;
 
 public record DeleteProductResult(bool IsSuccessful);
+
+public class DeleteProductCommandValidator : AbstractValidator<DeleteProductCommand>
+{
+    public DeleteProductCommandValidator()
+    {
+        RuleFor(c => c.Id).NotNull().WithMessage("Id is required"); 
+    }
+}
 internal class DeleteProductCommandHandler(IDocumentSession session)
     : ICommandHandler<DeleteProductCommand, DeleteProductResult>
 {
@@ -13,7 +23,7 @@ internal class DeleteProductCommandHandler(IDocumentSession session)
         var product = await session.LoadAsync<Product>(command.Id);
 
         if (product is null)
-            throw new ProductNotFoundException();
+            throw new ProductNotFoundException(command.Id);
 
         session.Delete(product);
         await session.SaveChangesAsync(cancellationToken);
