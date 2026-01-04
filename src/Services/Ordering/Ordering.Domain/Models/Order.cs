@@ -35,12 +35,13 @@ public class Order : Aggregate<OrderId>
         return order;
     }
 
-    public void Update(OrderName orderName, Address shippingAddress, Address billingAddress, Payment payment)
+    public void Update(OrderName orderName, Address shippingAddress, Address billingAddress, Payment payment, OrderStatus status)
     {
         OrderName = orderName;
         ShippingAddress = shippingAddress;
         BillingAddress = billingAddress;
         Payment = payment;
+        OrderStatus = status;
 
         AddDomainEvents(new OrderUpdateEvent(this));
     }
@@ -59,7 +60,7 @@ public class Order : Aggregate<OrderId>
     {
         var orderItem = _orderItems.FirstOrDefault(x => x.ProductId == productId);
 
-        if(orderItem is not null)
+        if (orderItem is not null)
             _orderItems.Remove(orderItem);
     }
 }
